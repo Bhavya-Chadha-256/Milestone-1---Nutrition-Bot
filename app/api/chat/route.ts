@@ -15,6 +15,16 @@ const DECLINE_RESPONSE = {
   claims: [],
 };
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: CORS_HEADERS });
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -25,7 +35,10 @@ export async function POST(req: NextRequest) {
 
     // Validate input
     if (!message || typeof message !== "string" || !message.trim()) {
-      return NextResponse.json({ error: "Missing message" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing message" },
+        { status: 400, headers: CORS_HEADERS }
+      );
     }
 
     // ── Phase 3: Scope guard ────────────────────────────────
@@ -35,7 +48,10 @@ export async function POST(req: NextRequest) {
         incomingSessionId && sessionExists(incomingSessionId)
           ? incomingSessionId
           : createSession();
-      return NextResponse.json({ session_id: sessionId, ...DECLINE_RESPONSE });
+      return NextResponse.json(
+        { session_id: sessionId, ...DECLINE_RESPONSE },
+        { headers: CORS_HEADERS }
+      );
     }
 
     // ── Session resolution ──────────────────────────────────
@@ -60,13 +76,22 @@ export async function POST(req: NextRequest) {
     // ── Persist (sync) ──────────────────────────────────────
     saveMessages(sessionId, message, result);
 
-    return NextResponse.json({ session_id: sessionId, ...result });
+    return NextResponse.json(
+      { session_id: sessionId, ...result },
+      { headers: CORS_HEADERS }
+    );
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Unknown error";
     if (msg.startsWith("MODEL_PARSE_ERROR")) {
-      return NextResponse.json({ error: msg }, { status: 500 });
+      return NextResponse.json(
+        { error: msg },
+        { status: 500, headers: CORS_HEADERS }
+      );
     }
     console.error("[/api/chat]", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500, headers: CORS_HEADERS }
+    );
   }
 }
