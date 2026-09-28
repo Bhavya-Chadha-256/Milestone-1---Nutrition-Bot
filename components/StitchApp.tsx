@@ -355,8 +355,8 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
         <div className="flex flex-col h-screen max-h-screen bg-zinc-950 text-zinc-100 overflow-hidden font-sans">
           
           {/* 1. Primary Navigation Header */}
-          <header className="h-16 px-4 md:px-6 bg-zinc-900/90 border-b border-zinc-800 flex items-center justify-between flex-shrink-0 z-20 backdrop-blur">
-            <div className="flex items-center space-x-3 md:space-x-4">
+          <header className="h-16 px-3 md:px-6 bg-zinc-900/90 border-b border-zinc-800 flex items-center justify-between flex-shrink-0 z-20 backdrop-blur">
+            <div className="flex items-center space-x-2 md:space-x-4">
               {/* History Drawer Toggle Button */}
               <button
                 onClick={() => setHistoryOpen(!historyOpen)}
@@ -372,14 +372,14 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
               </button>
 
               {/* Logo / Branding */}
-              <div className="flex items-center space-x-3">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-zinc-950 font-bold shadow-md shadow-emerald-500/20">
-                  <i data-lucide="leaf" className="w-5 h-5 text-zinc-950 stroke-[2.5]"></i>
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 md:w-9 md:h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-zinc-950 font-bold shadow-md shadow-emerald-500/20 flex-shrink-0">
+                  <i data-lucide="leaf" className="w-4 h-4 md:w-5 md:h-5 text-zinc-950 stroke-[2.5]"></i>
                 </div>
                 <div>
                   <div className="flex items-center space-x-2">
-                    <h1 className="text-base font-semibold tracking-tight text-zinc-100">Nutrition Bot</h1>
-                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <h1 className="hidden sm:block text-base font-semibold tracking-tight text-zinc-100">Nutrition Bot</h1>
+                    <span className="hidden xs:inline-block text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                       Milestone 1
                     </span>
                   </div>
@@ -388,7 +388,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
               </div>
 
               {/* View Switcher: 3 Full Tabs (Chat, Categorized Cards, Excel Spreadsheet Log) */}
-              <nav className="hidden md:flex items-center space-x-1 ml-4 bg-zinc-950/80 p-1 rounded-xl border border-zinc-800">
+              <nav className="hidden lg:flex items-center space-x-1 ml-4 bg-zinc-950/80 p-1 rounded-xl border border-zinc-800">
                 <button
                   onClick={() => setMainNav("chat")}
                   className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
@@ -429,12 +429,12 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
             </div>
 
             {/* Right Header Actions */}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1 md:space-x-2">
               {/* Mobile Main Tab Switcher Toggle */}
-              <div className="flex md:hidden bg-zinc-800 p-0.5 rounded-lg border border-zinc-700/60">
+              <div className="flex lg:hidden bg-zinc-800 p-0.5 rounded-lg border border-zinc-700/60">
                 <button
                   onClick={() => setMainNav("chat")}
-                  className={`px-2 py-1 text-xs font-medium rounded-md transition-all ${
+                  className={`px-1.5 sm:px-2 py-1 text-[10px] sm:text-xs font-medium rounded-md transition-all ${
                     mainNav === "chat" ? "bg-zinc-700 text-zinc-100" : "text-zinc-400"
                   }`}
                 >
@@ -442,7 +442,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
                 </button>
                 <button
                   onClick={() => setMainNav("logs")}
-                  className={`px-2 py-1 text-xs font-medium rounded-md transition-all ${
+                  className={`px-1.5 sm:px-2 py-1 text-[10px] sm:text-xs font-medium rounded-md transition-all ${
                     mainNav === "logs" ? "bg-zinc-700 text-zinc-100" : "text-zinc-400"
                   }`}
                 >
@@ -450,7 +450,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
                 </button>
                 <button
                   onClick={() => setMainNav("excel")}
-                  className={`px-2 py-1 text-xs font-medium rounded-md transition-all ${
+                  className={`px-1.5 sm:px-2 py-1 text-[10px] sm:text-xs font-medium rounded-md transition-all ${
                     mainNav === "excel" ? "bg-emerald-800 text-white" : "text-zinc-400"
                   }`}
                 >
@@ -461,12 +461,11 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
               {/* Reset / New Chat Button */}
               <button
                 onClick={handleResetChat}
-                className="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium text-zinc-100 bg-emerald-600/90 hover:bg-emerald-500 active:bg-emerald-700 border border-emerald-500/30 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500/50 shadow-sm"
-                aria-label="Reset Conversation and Start New Chat"
+                className="inline-flex items-center space-x-1.5 px-2 sm:px-3 py-1.5 text-xs font-medium text-zinc-100 bg-emerald-600/90 hover:bg-emerald-500 active:bg-emerald-700 border border-emerald-500/30 rounded-lg transition-colors focus:outline-none shadow-sm"
                 title="New Chat"
               >
                 <i data-lucide="plus" className="w-3.5 h-3.5 stroke-[2.5]"></i>
-                <span className="hidden sm:inline">New Chat</span>
+                <span className="hidden md:inline">New</span>
               </button>
             </div>
           </header>
@@ -487,11 +486,19 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
           {/* 2. Main Content Layout */}
           <div className="flex-1 flex overflow-hidden relative">
 
+            {/* Mobile History Drawer Overlay */}
+            {historyOpen && (
+              <div 
+                className="absolute inset-0 bg-black/60 z-40 md:hidden backdrop-blur-sm"
+                onClick={() => setHistoryOpen(false)}
+              />
+            )}
+
             {/* 2A. LEFT HISTORY DRAWER / SIDEBAR */}
             <aside
               className={`${
-                historyOpen ? "w-72 lg:w-80 border-r" : "w-0 border-r-0"
-              } transition-all duration-200 ease-in-out bg-zinc-925/95 border-zinc-800/80 flex flex-col flex-shrink-0 z-10 overflow-hidden select-none`}
+                historyOpen ? "translate-x-0 w-72 lg:w-80 border-r" : "-translate-x-full md:translate-x-0 md:w-0 border-r-0"
+              } absolute md:relative h-full transition-all duration-300 ease-in-out bg-zinc-950 md:bg-zinc-925/95 border-zinc-800/80 flex flex-col flex-shrink-0 z-50 md:z-10 overflow-hidden select-none`}
             >
               {/* History Search Header */}
               <div className="p-3 border-b border-zinc-800/80 space-y-2.5 bg-zinc-900/40">
