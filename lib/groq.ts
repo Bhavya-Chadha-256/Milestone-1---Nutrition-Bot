@@ -5,10 +5,20 @@ import Groq from "groq-sdk";
 import { ChatResponseSchema, type ChatResponse } from "./schema";
 import { SYSTEM_PROMPT } from "./systemPrompt";
 
-const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
 // Primary model. Fallback: "qwen/qwen3-27b"
 const MODEL = "openai/gpt-oss-120b";
+
+let _client: Groq | null = null;
+function getGroqClient(): Groq {
+  if (!_client) {
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) {
+      throw new Error("GROQ_API_KEY is not configured in the environment.");
+    }
+    _client = new Groq({ apiKey });
+  }
+  return _client;
+}
 
 // Appended to system prompt — reinforces exact JSON shape
 const FORMAT_REMINDER = `
@@ -21,6 +31,7 @@ export async function callModel(
   history: Array<{ role: "user" | "assistant"; content: string }>,
   userMessage: string
 ): Promise<ChatResponse> {
+  const client = getGroqClient();
   const response = await client.chat.completions.create({
     model: MODEL,
     max_tokens: 1024,

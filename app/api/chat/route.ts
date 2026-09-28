@@ -3,6 +3,8 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { callModel } from "@/lib/groq";
+
+export const dynamic = "force-dynamic";
 import { isBlocked } from "@/lib/scopeGuard";
 import { createSession, sessionExists, getHistory, saveMessages } from "@/lib/db";
 
