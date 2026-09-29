@@ -129,3 +129,46 @@ export function getFailureLogs() {
   const db = getDb();
   return db.prepare("SELECT * FROM failure_log ORDER BY run_at DESC").all();
 }
+
+export function getAllQueries() {
+  const db = getDb();
+  const messages = db.prepare("SELECT * FROM messages ORDER BY created_at ASC").all();
+  const queries = [];
+  
+  let lastUser: any = null;
+  for (const m of messages as any[]) {
+    try {
+      const content = JSON.parse(m.content);
+      if (m.role === 'user') {
+        lastUser = { ...m, content };
+      } else if (m.role === 'assistant' && lastUser && lastUser.session_id === m.session_id) {
+        
+        let assignedCategory = "All Categories";
+        const lower = lastUser.content.text.toLowerCase();
+        if (lower.includes("fasting") || lower.includes("16:8") || lower.includes("intermittent") || lower.includes("sweetener") || lower.includes("diet soda") || lower.includes("seed oil") || lower.includes("breakfast") || lower.includes("coffee") || lower.includes("egg") || lower.includes("cholesterol") || lower.includes("debate") || lower.includes("good or bad")) {
+          assignedCategory = "Questions where nobody has a clear answer";
+        } else if (lower.includes("steam") || lower.includes("boil") || lower.includes("fry") || lower.includes("smoke point") || lower.includes("microwave") || lower.includes("cook") || lower.includes("sous-vide") || lower.includes("reheat") || lower.includes("fridge") || lower.includes("freeze") || lower.includes("leftover") || lower.includes("wash") || lower.includes("clean") || lower.includes("bacteria") || lower.includes("salmonella")) {
+          assignedCategory = "Food safety and storage";
+        } else {
+          assignedCategory = "Nutrient requirements";
+        }
+
+        queries.push({
+          id: m.id,
+          code: `LOG-${m.id.substring(0,4).toUpperCase()}`,
+          sessionId: m.session_id,
+          targetMsgId: lastUser.id,
+          question: lastUser.content.text,
+          answer: content.answer || "Declined",
+          category: assignedCategory,
+          claimsCount: content.claims ? content.claims.length : 0,
+          timestamp: m.created_at,
+          status: "Verified Response",
+          tags: ["Global Database", assignedCategory.split(" ")[0]]
+        });
+        lastUser = null;
+      }
+    } catch(e) {}
+  }
+  return queries.reverse();
+}

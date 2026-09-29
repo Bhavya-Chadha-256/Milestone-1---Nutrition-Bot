@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getFailureLogs } from "@/lib/db";
+import { getAllQueries } from "@/lib/db";
 
 export const dynamic = 'force-dynamic';
 
@@ -25,7 +25,7 @@ export async function GET() {
       return NextResponse.json(data, { status: renderRes.status, headers: CORS_HEADERS });
     }
 
-    const logs = getFailureLogs();
+    const logs = getAllQueries();
     return NextResponse.json({ logs }, { headers: CORS_HEADERS });
   } catch (error: any) {
     return NextResponse.json(

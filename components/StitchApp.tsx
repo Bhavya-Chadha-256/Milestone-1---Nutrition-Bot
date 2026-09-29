@@ -91,6 +91,18 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
       const [historyOpen, setHistoryOpen] = useState(true);
       const [historySearch, setHistorySearch] = useState("");
       
+      // Fetch global logs from backend
+      useEffect(() => {
+        fetch("/api/logs")
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.logs) {
+              setQueryLogs(data.logs);
+            }
+          })
+          .catch((e) => console.error("Failed to fetch logs:", e));
+      }, []);
+
       // Active session management
       const [sessions, setSessions] = useState<any[]>(PAST_SESSIONS);
       const [activeSessionId, setActiveSessionId] = useState("session_1");
