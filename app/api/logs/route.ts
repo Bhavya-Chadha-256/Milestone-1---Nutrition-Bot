@@ -15,6 +15,16 @@ export async function OPTIONS() {
 
 export async function GET() {
   try {
+    // ── Runtime Vercel Proxy Bypass ─────────────────────────
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL;
+    if (backendUrl) {
+      const renderRes = await fetch(`${backendUrl.replace(/\/$/, "")}/api/logs`, {
+        method: "GET",
+      });
+      const data = await renderRes.json();
+      return NextResponse.json(data, { status: renderRes.status, headers: CORS_HEADERS });
+    }
+
     const logs = getFailureLogs();
     return NextResponse.json({ logs }, { headers: CORS_HEADERS });
   } catch (error: any) {

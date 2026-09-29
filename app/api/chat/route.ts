@@ -33,6 +33,18 @@ export async function POST(req: NextRequest) {
       message?: unknown;
     };
 
+    // ── Runtime Vercel Proxy Bypass ─────────────────────────
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL;
+    if (backendUrl) {
+      const renderRes = await fetch(`${backendUrl.replace(/\/$/, "")}/api/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      const data = await renderRes.json();
+      return NextResponse.json(data, { status: renderRes.status, headers: CORS_HEADERS });
+    }
+
     // Validate input
     if (!message || typeof message !== "string" || !message.trim()) {
       return NextResponse.json(
