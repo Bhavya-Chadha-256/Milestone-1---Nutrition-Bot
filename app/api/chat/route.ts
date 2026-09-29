@@ -34,8 +34,12 @@ export async function POST(req: NextRequest) {
     };
 
     // ── Runtime Vercel Proxy Bypass ─────────────────────────
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL;
-    if (backendUrl) {
+    // Always proxy to Render backend when running on Vercel (or when BACKEND_URL is set)
+    const RENDER_URL = "https://milestone-1-nutrition-bot.onrender.com";
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL || RENDER_URL;
+    // Only proxy if we're NOT already on Render (avoid infinite loop)
+    const isOnRender = process.env.RENDER === "true" || process.env.IS_PULL_REQUEST !== undefined;
+    if (!isOnRender) {
       const renderRes = await fetch(`${backendUrl.replace(/\/$/, "")}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
